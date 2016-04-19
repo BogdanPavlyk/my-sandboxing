@@ -1,0 +1,177 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false" controller="Index2Controller" >
+<link href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css" rel="stylesheet" />
+<link href='https://fonts.googleapis.com/css?family=Roboto:500,300,700,400' rel='stylesheet' type='text/css'/>
+<link href="https://www.googledrive.com/host/0B7QNjbNY6A-8X3JWeHpIX2libHc/main.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-git.min.js"></script>
+    <vs:importvisualstrap theme="paper" />     
+     <vs:visualstrapblock >
+     
+      <vs:navbar brand="Pavlyk&Sons" inverse="true" type="fixed-top">  
+        <ul class="nav navbar-nav">
+          <li class="active"><a data-toggle="tab" href="#Products">Products</a></li>
+          <li><a data-toggle="tab" href="#Cart" rerender="cart" >Cart</a></li>
+           
+        </ul>
+      </vs:navbar>
+     
+     <div class="tab-content" id="tabs">
+
+      <div id="Products" class="tab-pane fade in active">     
+      <vs:row >  
+        <vs:column type="col-md-2">
+         <apex:form id="theForm">
+         
+           <vs:panel title="Categories" type="success">          
+            <apex:repeat value="{!categories}" var="category">             
+                <apex:commandButton rerender="products" value="{!category}S" styleClass="btn btn-block btn-default">
+                    <apex:param name="category" value="{!category}"/>                  
+                </apex:commandButton>
+            </apex:repeat>
+           </vs:panel> 
+           
+         </apex:form> 
+        </vs:column>
+        
+        <vs:column type="col-md-10"> 
+          <vs:panel title="Products" type="primary" id="products" >                   
+            <div class="container">
+              <apex:repeat value="{!products}" var="product">
+                <div class="col-md-5"> 
+                  <div class="thumbnail"> 
+                    <img src="{!product.image__c}"/>
+                    <p class="title">{!product.Name}</p> 
+                    <p class="title">{!product.Quantity__c} left</p> 
+                    <p class="price">${!product.Price__c}</p> 
+                    
+                    <apex:form >
+                      <apex:commandButton action="{!addLineItem}" value=" Add" reRender="cart, products, cancelBtn" styleClass="btn-default">
+                        <apex:param assignTo="{!currentProduct}" value="{!product.id}" name="currentProduct"/>
+                      </apex:commandButton>
+                    </apex:form>
+                  </div>
+                </div>        
+              </apex:repeat>
+            </div>               
+          </vs:panel>
+        </vs:column> 
+      </vs:row>
+      </div>  
+      
+      <div id="Cart" class="tab-pane fade">
+      <vs:row >
+
+      <apex:form >
+      <vs:column type="col-lg-12 col-md-12 col-sm-12 col-xs-12">       
+        <vs:panel title="Items" type="success" id="cart" >
+          <apex:outputPanel >
+            <apex:dataTable value="{!orders1}" var="order" styleClass="table table-hover" >
+                <apex:column headerValue="Product Name" value="{!order.merchandise.name}" />
+                                                        
+                
+                             
+                <apex:column >  
+                  <apex:commandButton action="{!deleteFromOrder}" value="Delete" reRender="cart, products" >
+                    <apex:param assignTo="{!currentOrder_product}" value="{!order.merchandise.id}" name="currentOrder_product"/>
+                  </apex:commandButton>           
+                </apex:column>
+                             
+                <apex:column headerValue="Available quantity">
+                            <apex:outputText value="{!order.merchandise.Quantity__c}" />     
+                </apex:column>
+                
+                <apex:column headerValue="Ordered">
+                <div id="quantity">
+                <input type="number" min="1" max="{!order.merchandise.Quantity__c}" step="1" value="{!order.orderQuantity}"/>
+                    
+                </div>
+              <!--  <apex:inputText id="quantity" value="{!order.orderQuantity}" onkeypress="if(event.keyCode == 13){rerenderCart(); return false;}" >
+                   <apex:actionSupport event="onkeypress" rerender="price"/>
+                   </apex:inputText>-->
+                </apex:column>
+                
+                <apex:column headerValue="Price" >
+                  <apex:outputText id="price" value="{!order.price}" />
+                </apex:column>
+                             
+            </apex:dataTable>  
+            <apex:actionFunction name="rerenderPrice" rerender="price" />
+          <p style="text-align:right; font-size: 22px; margin-left: 40px;"> Total price:  <apex:outputText value=" ${!totalPrice}"/></p><br/>
+         
+            <apex:actionFunction name="rerenderCart" action="{!rerenderCart}" rerender="price"/>                
+          </apex:outputPanel>
+        
+              <apex:commandButton value="Submit Order" onclick="return false;"
+              html-data-toggle="modal" html-data-target="#newRequest" styleClass="btn-success brn-lg" rendered="{!orders1.size > 0}" /><br/>
+              <apex:commandButton action="{!cancelOrder}" onclick="myAlert();" reRender="products, cart" value="Cancel" styleClass="btn-warning brn-lg"
+                rendered="{!orders1.size > 0}" />                     
+      </vs:panel> 
+      </vs:column> 
+    </apex:form>
+
+    <!-- the modal form--> 
+    <apex:form > 
+       <vs:modal title="New Request" id="newRequest">  
+         <apex:pageBlock mode="maindetail" >  
+           <apex:pageBlockSection >  
+             <apex:pageBlockSectionItem >  
+               <apex:outputLabel >First Name</apex:outputLabel>  
+               <apex:inputText value="{!client_name}"/>  
+             </apex:pageBlockSectionItem>  
+             <apex:pageBlockSectionItem >  
+               <apex:outputLabel >Phone</apex:outputLabel>  
+               <apex:inputText value="{!phone}"/>   
+             </apex:pageBlockSectionItem>  
+             <apex:pageBlockSectionItem >  
+               <apex:outputLabel >Email</apex:outputLabel>  
+               <apex:inputText value="{!email}"/>  
+             </apex:pageBlockSectionItem>  
+           </apex:pageBlockSection>  
+         </apex:pageBlock>  
+         <apex:outputPanel styleClass="modal-footer" layout="block">  
+           <apex:commandButton value="Close" styleClass="btn-warning" html-data-dismiss="modal" />  
+           <apex:commandButton value="Save Request" styleClass="btn-success"  action="{!makeOrder}" />  
+         </apex:outputPanel>  
+       </vs:modal>
+    
+
+      </apex:form>  
+      </vs:row>   
+      </div>
+      </div>       
+          
+  </vs:visualstrapblock>   
+ 
+ <script>
+    $('#quantity').on('input', function() {
+    alert('Text1 changed!');
+  });
+  </script>
+  <script>
+ 
+  
+  function myAlert() {
+    alert("Thank You for visiting our shop!");
+};
+  
+  function inputLimiter(e,allow) {
+            var AllowableCharacters = '';
+
+            if (allow == 'Letters'){AllowableCharacters=' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';}
+            if (allow == 'Numbers'){AllowableCharacters='1234567890';}
+            if (allow == 'NameCharacters'){AllowableCharacters=' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-.\'';}
+            if (allow == 'NameCharactersAndNumbers'){AllowableCharacters='1234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-\'';}
+            if (allow == 'Currency'){AllowableCharacters='1234567890.';}
+
+            var k = document.all?parseInt(e.keyCode): parseInt(e.which);
+            if (k!=13 && k!=8 && k!=0){
+                if ((e.ctrlKey==false) && (e.altKey==false)) {
+                return (AllowableCharacters.indexOf(String.fromCharCode(k))!=-1);
+                } else {
+                return true;
+                }
+            } else {
+                return true;
+            }
+        } 
+  </script>       
+</apex:page>

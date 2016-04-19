@@ -1,0 +1,75 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false" controller="IndexController" >
+    <vs:importvisualstrap theme="paper" />     
+     <vs:visualstrapblock >
+     
+      <vs:navbar brand="Pavlyk&Sons" inverse="true" type="fixed-top">  
+         Bogdan Pavlyk and Alex Bezrodny
+       </vs:navbar>
+       
+     <c:Tabpanel theme="start" >
+      <c:Tab title="Home" >    
+       <!-- highlighted content -->  
+       <apex:outputPanel layout="block" styleClass="container" >  
+         <apex:outputPanel layout="block" styleClass="jumbotron" style="text-align:center">  
+           <h1> Our web shop is available 24/7</h1>  
+             
+         </apex:outputPanel>
+       </apex:outputPanel> 
+      </c:Tab>
+      
+      <c:Tab title="Catalog">   
+      <vs:row >  
+        <vs:column type="col-md-2">
+         <apex:form id="theForm">
+         
+           <vs:panel title="Categories" type="success">          
+            <apex:repeat value="{!categories}" var="category">
+             <apex:outputPanel styleClass="btn-group" layout="block"> 
+                <apex:commandButton rerender="products" value="{!category}" styleClass="btn-default">                   
+                    <apex:param name="category" value="{!category}"/>                  
+                </apex:commandButton>
+             </apex:outputPanel>   
+            </apex:repeat>
+           </vs:panel> 
+           
+         </apex:form> 
+        </vs:column>
+        
+        <vs:column type="col-md-10"> 
+            <vs:panel title="Products" type="primary" id="products" >           
+                   
+                           <apex:dataTable value="{!products}" var="product" styleClass="table table-hover" >
+                             <apex:column headerValue="Product Name" value="{!product.name}" />
+                                                        
+                              <apex:column headerValue="Price" >
+                                <apex:outputText value="{!product.Price__c}" />
+                             </apex:column>
+                             
+                             <apex:column >
+                                 <apex:form >
+                                 
+                                     
+                                      <apex:inputHidden id="currentProduct" value="{!product.id}"/>
+                                     <apex:commandButton value="Buy" action="{!addLineItem}" >
+                                     <apex:param name="currentProduct" value="{!product.id}" />
+                                     
+                                     </apex:commandButton>
+                                 </apex:form>       
+                             </apex:column>
+                             
+                             <apex:column headerValue="Image">
+                                 <img src="{!product.image__c}"/>
+                             </apex:column>
+                             
+                           </apex:dataTable>
+                           
+                           <apex:form >
+                           <apex:commandButton value="make Order" action="{!makeOrder}"/>
+                                 </apex:form>                                      
+            </vs:panel>  
+        </vs:column>
+       </vs:row> 
+      </c:Tab>
+      </c:Tabpanel>       
+        </vs:visualstrapblock>          
+</apex:page>

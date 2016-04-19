@@ -1,0 +1,56 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false" controller="IndexTestController" >
+    <vs:importvisualstrap theme="paper" />     
+     <vs:visualstrapblock >
+     
+      <vs:navbar brand="Pavlyk&Sons" inverse="true" type="fixed-top">  
+         Bogdan Pavlyk and Alex Bezrodny  
+       </vs:navbar>  
+       <!-- highlighted content --> 
+    <c:Tabpanel theme="start">
+     <c:Tab title="Catalog">    
+       <apex:outputPanel layout="block" styleClass="container" >  
+         <apex:outputPanel layout="block" styleClass="jumbotron" style="text-align:center">  
+           <h1> Our web shop is available 24/7</h1>  
+           <p> </p>  
+         </apex:outputPanel>
+       </apex:outputPanel>   
+      <vs:row >  
+        <vs:column type="col-md-2">
+         <apex:form id="theForm">
+         
+           <vs:panel title="Categories" type="info">          
+            <apex:repeat value="{!categories}" var="category">
+             <apex:outputPanel styleClass="btn-group" layout="block"> 
+                <apex:commandButton rerender="products" value="{!category}" styleClass="btn-default">                   
+                    <apex:param name="category" value="{!category}"/>                  
+                </apex:commandButton>
+             </apex:outputPanel>   
+            </apex:repeat>
+           </vs:panel> 
+           
+         </apex:form> 
+        </vs:column>
+        
+        <vs:column type="col-md-10"> 
+            <vs:panel title="Products" type="primary" id="products" >           
+                   
+                           <apex:dataTable value="{!products}" var="product" styleClass="table table-hover" >
+                             <apex:column headerValue="Product Name" value="{!product.name}" />
+                                                        
+                             <apex:column headerValue="Product Category" >
+                                <apex:outputText value="{!product.Category__c}" />
+                             </apex:column>
+                             
+                           </apex:dataTable>
+                                                                       
+            </vs:panel>  
+        </vs:column>
+       </vs:row>     
+     </c:Tab>
+     
+     <c:Tab title="Cart">
+         Your cart
+     </c:Tab>
+   </c:Tabpanel>    
+        </vs:visualstrapblock>          
+</apex:page>

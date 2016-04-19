@@ -1,0 +1,34 @@
+<apex:page Controller="AccountAndContactsController">
+    <apex:pageBlock title="Accounts">
+        <apex:form >
+            <apex:dataList value="{! accounts}" var="account">
+                <apex:commandLink rerender="contacts">
+                    {! account.name}
+                    <apex:param name="currentId" value="{!account.id}"/>                  
+                </apex:commandLink>
+            </apex:dataList>
+        </apex:form>
+    </apex:pageBlock>
+  
+    <apex:pageBlock title="Contacts">
+        <apex:outputPanel id="contacts">
+            <apex:pageBlockTable value="{!contacts}" var="contact" >
+    <apex:column headerValue="Contact name">
+    <apex:outputText value="{!contact.Name}"/>
+    </apex:column>        
+    <apex:column headerValue="Assistant name">
+    <apex:outputText value="{!contact.AssistantName}"/>
+    </apex:column>
+    <apex:column headerValue="Department" >
+    <apex:outputText value="{!contact.Department}"/>
+    </apex:column>
+    <apex:column headerValue="E-mail">
+    <apex:outputText value="{!contact.email}"/>
+    </apex:column>
+    <apex:column headerValue="Fax" width="100">
+    <apex:outputText value="{!contact.Fax}"/>
+    </apex:column>
+    </apex:pageBlockTable>
+        </apex:outputPanel>
+    </apex:pageBlock>
+</apex:page>

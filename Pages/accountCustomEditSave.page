@@ -1,0 +1,25 @@
+<apex:page standardController="Account" sidebar="false" extensions="AccountCustomEditExtension">
+   <apex:form >
+     <apex:pageBlock mode="edit" rendered="{!Flag}" id="account_fields" >         
+       <apex:pageBlockSection >
+           <apex:outputField value="{!Account.Name}"/>
+           <apex:outputField value="{!Account.industry}"/>
+       </apex:pageBlockSection>
+       
+       <apex:pageBlockSection >
+           <apex:commandButton action="{!changeFlag}" value="Править" />
+       </apex:pageBlockSection>
+     </apex:pageBlock>
+     
+     <apex:pageBlock title="Account Editting" rendered="{! NOT(flag)}" >
+      <apex:pageBlockSection >
+        <apex:inputField value="{!Account.Name}" required="false" />
+        <apex:inputField value="{!Account.Industry}" />
+      </apex:pageBlockSection>  
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!customSave}" value="Сохранить"/>
+        <apex:commandButton action="{!customCancel}" value="Отмена" immediate="true"/>
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+    </apex:form> 
+</apex:page>

@@ -1,0 +1,8 @@
+<apex:page standardController="Account">
+    <apex:dataTable value="{!account.contacts}" var="contact">
+        <apex:column >
+        <apex:facet name="header">Name</apex:facet>
+        <apex:outputText value="{!contact.Email}"/>
+        </apex:column>
+    </apex:dataTable>
+</apex:page>

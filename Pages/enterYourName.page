@@ -1,0 +1,24 @@
+<apex:page controller="EnterYourNameController" sidebar="false">
+  <apex:form >
+   <apex:pageBlock mode="detail">
+    <script type='text/javascript'>
+      function noenter(ev)  {
+          if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+              rerenderDisplay();
+              return false;
+         } else {
+              return true;
+         }
+      }
+    </script>
+    
+    <apex:outputLabel value="Введите свое имя " />
+     <apex:actionFunction name="rerenderDisplay" rerender="display" />
+       <apex:inputText value="{!userinput}" onkeypress="return noenter(event);" />
+                   
+    <apex:outputpanel >
+        <apex:outputtext value=" Вы ввели имя: {!userinput}" id="display"/>
+    </apex:outputpanel>
+   </apex:pageBlock>                    
+  </apex:form>    
+</apex:page>

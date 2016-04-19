@@ -1,0 +1,14 @@
+<apex:page controller="EnterYourNameController" sidebar="false">
+  <apex:form >
+   <apex:pageBlock mode="detail">
+    
+    <apex:outputLabel value="Введите свое имя " />
+     <apex:actionFunction name="rerenderDisplay" rerender="display" />
+       <apex:inputText value="{!userinput}" onkeypress="if(event.keyCode == 13){rerenderDisplay(); return false;}" />
+                   
+    <apex:outputpanel >
+        <apex:outputtext value=" Вы ввели имя: {!userinput}" id="display"/>
+    </apex:outputpanel>
+   </apex:pageBlock>                    
+  </apex:form>    
+</apex:page>

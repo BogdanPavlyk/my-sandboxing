@@ -1,0 +1,125 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false" controller="IndexController" >
+<link href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:500,300,700,400' rel='stylesheet' type='text/css'/>
+    <link href="https://www.googledrive.com/host/0B7QNjbNY6A-8X3JWeHpIX2libHc/main.css" rel="stylesheet" />
+    <vs:importvisualstrap theme="paper" />     
+     <vs:visualstrapblock >
+     
+      <vs:navbar brand="Pavlyk&Sons" inverse="true" type="fixed-top">  
+        <ul class="nav navbar-nav">
+          <li class="active"><a data-toggle="tab" href="#Catalog">Products</a></li>
+          <li><a data-toggle="tab" href="#Cart">Cart</a></li>
+        </ul>
+      </vs:navbar>
+     
+     <div class="tab-content">
+
+      <div id="Catalog" class="tab-pane fade in active">     
+      <vs:row >  
+        <vs:column type="col-md-2">
+         <apex:form id="theForm">
+         
+           <vs:panel title="Categories" type="success">          
+            <apex:repeat value="{!categories}" var="category">             
+                <apex:commandButton rerender="products" value="{!category}" styleClass="btn btn-block btn-default">
+                    <apex:param name="category" value="{!category}"/>                  
+                </apex:commandButton>
+            </apex:repeat>
+           </vs:panel> 
+           
+         </apex:form> 
+        </vs:column>
+        
+        <vs:column type="col-md-10"> 
+          <vs:panel title="Products" type="primary" id="products" >                   
+            <div class="container">
+              <apex:repeat value="{!products}" var="product">
+                <div class="col-md-5"> 
+                  <div class="thumbnail"> 
+                    <img src="{!product.image__c}"/>
+                    <p class="title">{!product.Name}</p> 
+                    <p class="title">{!product.Quantity__c} left</p> 
+                    <p class="price">${!product.Price__c}</p> 
+                    
+                    <apex:form >
+                      <apex:commandButton action="{!addLineItem}" value=" Add" reRender="cart" styleClass="btn-default">
+                        <apex:param assignTo="{!currentProduct}" value="{!product.id}" name="currentProduct"/>
+                      </apex:commandButton>
+                    </apex:form>
+                  </div>
+                </div>        
+              </apex:repeat>
+            </div>               
+          </vs:panel>
+        </vs:column> 
+      </vs:row>
+      </div>  
+      
+      <div id="Cart" class="tab-pane fade">
+      <vs:row >
+
+      <apex:form >
+      <vs:column type="col-lg-12 col-md-12 col-sm-12 col-xs-12">       
+        <vs:panel title="Items" type="success" id="cart" >
+          <apex:outputPanel >
+            <apex:dataTable value="{!orders}" var="order" styleClass="table table-hover" >
+                <apex:column headerValue="Product Name" value="{!order.name}" />
+                                                        
+                <apex:column headerValue="Price" >
+                  <apex:outputText value="{!order.Price__c}" />
+                </apex:column>
+                             
+                <apex:column >  
+                  <apex:commandButton action="{!deleteFromOrder}" value="Delete" reRender="cart">
+                    <apex:param assignTo="{!currentOrder_product}" value="{!order.id}" name="currentOrder_product"/>
+                  </apex:commandButton>           
+                </apex:column>
+                             
+                <apex:column headerValue="Quantity">
+                                 
+                </apex:column>
+                             
+            </apex:dataTable>                        
+          </apex:outputPanel>
+
+              <!-- <apex:commandButton action="{!makeOrder}" value="Submit Order"/> -->
+              <apex:commandButton value="Submit Order" onclick="return false;"
+              html-data-toggle="modal" html-data-target="#newRequest" styleClass="btn-success brn-lg"/><br/>
+              <apex:commandButton action="{!cancelOrder}" value="Cancel" styleClass="btn-warning brn-lg"/>                     
+        </vs:panel>  
+      </vs:column> 
+    
+      </apex:form>  
+      </vs:row>   
+      </div>
+      </div>       
+   
+    
+    <!-- the modal form-->  
+    <apex:form >    
+       <vs:modal title="New Request" id="newRequest">  
+         <apex:pageBlock mode="maindetail" >  
+           <apex:pageBlockSection >  
+             <apex:pageBlockSectionItem >  
+               <apex:outputLabel >First Name</apex:outputLabel>  
+               <apex:input type="text"/>  
+             </apex:pageBlockSectionItem>  
+             <apex:pageBlockSectionItem >  
+               <apex:outputLabel >Last Name</apex:outputLabel>  
+               <apex:input type="text"/>  
+             </apex:pageBlockSectionItem>  
+             <apex:pageBlockSectionItem >  
+               <apex:outputLabel >Email</apex:outputLabel>  
+               <apex:input type="text"/>  
+             </apex:pageBlockSectionItem>  
+           </apex:pageBlockSection>  
+         </apex:pageBlock>  
+         <apex:outputPanel styleClass="modal-footer" layout="block">  
+           <apex:commandButton value="Close" styleClass="btn-warning" html-data-dismiss="modal" />  
+           <apex:commandButton value="Save Request" styleClass="btn-success" html-data-dismiss="modal"/>  
+         </apex:outputPanel>  
+       </vs:modal>
+         
+      </apex:form>       
+  </vs:visualstrapblock>          
+</apex:page>

@@ -1,0 +1,139 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false" controller="IndexController" >
+<link href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css" rel="stylesheet" />
+<link href='https://fonts.googleapis.com/css?family=Roboto:500,300,700,400' rel='stylesheet' type='text/css' />
+<link href="https://www.googledrive.com/host/0B7QNjbNY6A-8X3JWeHpIX2libHc/main.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+
+<div  ng-controller="MainController">
+
+
+    <vs:importvisualstrap theme="paper" />     
+     <vs:visualstrapblock >
+     
+      <vs:navbar brand="Pavlyk&Sons" inverse="true" type="fixed-top">  
+         Bogdan Pavlyk and Alex Bezrodny
+       </vs:navbar>
+     <c:Tabpanel >
+      <c:Tab title="Home">    
+       <!-- highlighted content -->  
+       <apex:outputPanel layout="block" styleClass="container" >  
+         <apex:outputPanel layout="block" styleClass="jumbotron" style="text-align:center">  
+           <h1> Our web shop is available 24/7</h1>  
+           <p> </p>  
+         </apex:outputPanel>
+       </apex:outputPanel> 
+      </c:Tab>
+      
+      <c:Tab title="Catalog">   
+      <vs:row >  
+        <vs:column type="col-md-2">
+         <apex:form id="theForm">
+         
+           <vs:panel title="Categories" type="info">          
+            <apex:repeat value="{!categories}" var="category">
+             <apex:outputPanel styleClass="btn-group" layout="block"> 
+                <apex:commandButton rerender="products" value="{!category}" styleClass="btn-default" >                   
+                    <apex:param name="category" value="{!category}"/>                  
+                </apex:commandButton>
+             </apex:outputPanel>   
+            </apex:repeat>
+           </vs:panel> 
+           
+         </apex:form> 
+        </vs:column>
+        
+        <vs:column type="col-md-10"> 
+            <vs:panel title="Products" type="primary" id="products" >  
+                    
+                   <div ng-app="app" ng-controller="MainController">
+<div class="container">
+                  
+      <div ng-repeat="product in products" class="col-md-5"> 
+                  <div class="thumbnail"> 
+              
+              <img ng-src="https://www.googledrive.com/host/0B7QNjbNY6A-8X3JWeHpIX2libHc/iphone1.jpg"/> 
+              <p class="title">{{ product.name }}</p> 
+              <p class="price">{{ product.price | currency }}</p> 
+              <p class="date">{{ product.pubdate | date }}</p> 
+              
+            </div>
+            </div>        
+            </div>    
+            </div>
+
+                          <!-- <apex:dataTable value="{!products}" var="product" styleClass="table table-hover" >
+                             <apex:column headerValue="Product Name" value="{!product.name}" />
+                                                        
+                              <apex:column headerValue="Price" >
+                                <apex:outputText value="{!product.Price__c}" />
+                             </apex:column>
+                             
+                             <apex:column headerValue="Price" >
+                                 <apex:form >
+                                     <apex:commandButton value="Add" />
+                                 </apex:form>       
+                             </apex:column>
+                             
+                             <apex:column headerValue="Image">
+                                 <apex:image value="{!product.image__c}"/>
+                             </apex:column>
+                             
+                           </apex:dataTable> -->
+                                                                       
+            </vs:panel>  
+        </vs:column>
+       </vs:row> 
+      </c:Tab>
+      </c:Tabpanel>       
+        </vs:visualstrapblock>  
+        <script type="text/javascript">
+  var app = angular.module("app", []);
+    app.controller('MainController', ['$scope', function($scope) {
+  $scope.test = '';
+  $scope.promo = 'my promo?'
+ $scope.products =
+    [ 
+  { 
+    name: 'The Book of Trees', 
+    price: 19, 
+    pubdate: new Date('2014', '03', '08'), 
+    cover: 'img/the-book-of-trees.jpg',
+    likes: 0,
+    dislikes: 0
+  }, 
+  { 
+    name: 'Program or be Programmed', 
+    price: 8, 
+    pubdate: new Date('2013', '08', '01'), 
+    cover: 'img/program-or-be-programmed.jpg' ,
+    likes: 0,
+    dislikes: 0
+  } ,
+    { 
+    name: 'The Book of Trees', 
+    price: 19, 
+    pubdate: new Date('2014', '03', '08'), 
+    cover: 'img/the-book-of-trees.jpg' ,
+    likes: 0,
+    dislikes: 0
+  }, 
+  { 
+    name: 'Program or be Programmed', 
+    price: 8, 
+    pubdate: new Date('2013', '08', '01'), 
+    cover: 'img/program-or-be-programmed.jpg' ,
+    likes: 0,
+    dislikes: 0
+  } 
+  
+]
+                                }] );
+       angular.element(document).ready(function() {
+    angular.bootstrap(document, ['app']);
+});
+
+ 
+
+  </script>
+</div>        
+</apex:page>
